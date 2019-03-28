@@ -1,7 +1,6 @@
-package server
+package main
 
 import (
-	"ahris_url_shortener/cmd/data"
 	"github.com/labstack/echo"
 	"net/http"
 	"os"
