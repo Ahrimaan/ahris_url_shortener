@@ -55,7 +55,28 @@
   <section id="hero">
     <div class="hero-container">
       <h3>Please add your link with full schema like http://www.dev.de</h3>
-      <a href="#about" class="btn-get-started">Get your Link</a>
+
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">https://example.com/</span>
+        </div>
+        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+      </div>
+
+      <a href="javascript:getLink()" class="btn-get-started">Get your Link</a>
+
+      <br>
+      <div id="result" hidden class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1>Here is your Link</h1>
+<br>
+          <p id="linkText">LINK</p>
+          <br>
+          <a id="link" href="javascript:void(0);" target="_blank">LINK</a>
+          <br>
+          <p>Your Link expires in 15 Days !</p>
+        </div>
+      </div>
     </div>
   </section><!-- #hero -->
 
