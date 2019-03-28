@@ -18,7 +18,7 @@ func GetWithId(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "The Model you have given is not correct: "+err.Error())
 	}
-	url, err := data.GetUrl(urlId)
+	url, err := GetUrl(urlId)
 	if err != nil {
 		return c.String(http.StatusNotFound, "Could not find data")
 	}
@@ -37,7 +37,7 @@ func GetShortenedUrl(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "The Model you have given is not correct: "+err.Error())
 	}
 
-	newId, err := data.SetNewRecord(req.Url)
+	newId, err := SetNewRecord(req.Url)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "OOOPS Something went wrong, sorry for that ")
 	}
