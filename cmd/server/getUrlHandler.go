@@ -1,34 +1,55 @@
 package server
 
 import (
+	"ahris_url_shortener/cmd/data"
 	"github.com/labstack/echo"
 	"net/http"
 )
 
-type Response struct {
-	Url string `json:"url"`
-	Id  string `json:"Id"`
-}
-
-type Request struct {
+type UrlModel struct {
 	Url string `json:"url"`
 }
 
-func getWithId(c echo.Context) error {
+func GetWithId(c echo.Context) error {
 	var urlId = c.Param("id")
-	return c.String(http.StatusOK, urlId)
-}
-
-func getShortenedUrl(c echo.Context) error {
-	req := new(Request)
+	req := new(UrlModel)
 	err := c.Bind(req)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "The Model you have given is not correct: "+err.Error())
 	}
-	resp := &Response{
-		Url: req.Url,
-		Id:  GetRandomId(5),
+	url, err := data.GetUrl(urlId)
+	if err != nil {
+		return c.String(http.StatusNotFound, "Could not find data")
+	}
+	if url == "" {
+		return c.String(http.StatusNotFound, "Could not find data")
+	}
+
+	return c.Redirect(http.StatusMovedPermanently, url)
+}
+
+func GetShortenedUrl(c echo.Context) error {
+
+	req := new(UrlModel)
+	err := c.Bind(req)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "The Model you have given is not correct: "+err.Error())
+	}
+
+	newId, err := data.SetNewRecord(req.Url)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "OOOPS Something went wrong, sorry for that ")
+	}
+	newUri := getCurrentUrl(c, newId)
+	resp := &UrlModel{
+		Url: newUri,
 	}
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func getCurrentUrl(c echo.Context, id string) string {
+	r := c.Request()
+	currentURL := c.Scheme() + "://" + r.Host + r.URL.Path + id
+	return currentURL
 }
