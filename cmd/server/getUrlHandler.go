@@ -6,8 +6,8 @@ import (
 )
 
 type Response struct {
-	Url          string `json:"url"`
-	ShortenedUrl string `json:"shortenedUrl"`
+	Url string `json:"url"`
+	Id  string `json:"Id"`
 }
 
 type Request struct {
@@ -26,8 +26,8 @@ func getShortenedUrl(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "The Model you have given is not correct: "+err.Error())
 	}
 	resp := &Response{
-		Url:          req.Url,
-		ShortenedUrl: "newURL",
+		Url: req.Url,
+		Id:  GetRandomId(5),
 	}
 
 	return c.JSON(http.StatusOK, resp)
