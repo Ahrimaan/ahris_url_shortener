@@ -4,6 +4,7 @@ import (
 	"ahris_url_shortener/cmd/data"
 	"github.com/labstack/echo"
 	"net/http"
+	"os"
 )
 
 type UrlModel struct {
@@ -25,7 +26,7 @@ func GetWithId(c echo.Context) error {
 		return c.String(http.StatusNotFound, "Could not find data")
 	}
 
-	return c.Redirect(http.StatusMovedPermanently, url)
+	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func GetShortenedUrl(c echo.Context) error {
@@ -49,7 +50,10 @@ func GetShortenedUrl(c echo.Context) error {
 }
 
 func getCurrentUrl(c echo.Context, id string) string {
-	r := c.Request()
-	currentURL := c.Scheme() + "://" + r.Host + r.URL.Path + id
+	currentURL := os.Getenv("API_URL")
+	if currentURL == "" {
+		r := c.Request()
+		currentURL = c.Scheme() + "://" + r.Host + "/api/" + id
+	}
 	return currentURL
 }
