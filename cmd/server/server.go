@@ -1,15 +1,21 @@
-package main
+package server
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"os"
 )
 
 func StartServer(port string) {
 	e := echo.New()
-
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{os.Getenv("ALLOW_ORIGIN")},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPost},
+	}))
 	registerRoutes(e)
 	if os.Getenv("DEBUG") == "true" {
 		e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{

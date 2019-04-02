@@ -1,9 +1,10 @@
-package main
+package database
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
